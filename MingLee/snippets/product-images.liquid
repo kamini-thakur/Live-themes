@@ -1,0 +1,124 @@
+{% assign featured_image = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
+  {% capture list %}
+    {% for image in product.images %}
+      {% comment %}Loop through images only once{% endcomment %}
+      {{ image.id }}`~`{{ image.alt }}`~`{{ image | product_img_url: '100x' }}`~`{{ image | product_img_url: '200x' }}`~`{{ image | product_img_url: '400x' }}`~`{{ image | product_img_url: '600x' }}`~`{{ image | product_img_url: '800x' }}`~`{{ image | product_img_url: '1200x' }}`~`{{ image | product_img_url: '2000x' }}
+      {% if forloop.last == false %}^{% endif %}
+    {% endfor %}
+  {% endcapture %}
+  {% assign image_list = list | split: "^" %}
+
+<div class="gallery-wrap js-product-page-gallery clearfix
+            {% if settings.gallery_arrows %} show-gallery-arrows {% endif %}
+            {% if settings.product_thumbs %} {{settings.thumbnail_position}} {% endif %}
+            ">
+  <div class="product_gallery product-{{ product.id }}-gallery
+              {% if product-images == blank %} product_slider {% endif %}
+              {% if product.images.size > 1 %} multi-image {% endif %}
+              {% if product.images.size <= 1 %} single-image {% endif %}
+              ">
+
+      {% for image_item in image_list %}
+        {% assign image = image_item | split: "`~`" %}
+        {% capture image_id %}{{ image[0] | strip }}{% endcapture %}
+        {% capture image_alt %}{{ image[1] | strip }}{% endcapture %}
+        {% capture image_100x %}{{ image[2] }}{% endcapture %}
+        {% capture image_200x %}{{ image[3] }}{% endcapture %}
+        {% capture image_400x %}{{ image[4] }}{% endcapture %}
+        {% capture image_600x %}{{ image[5] }}{% endcapture %}
+        {% capture image_800x %}{{ image[6] }}{% endcapture %}
+        {% capture image_1200x %}{{ image[7] }}{% endcapture %}
+        {% capture image_2000x %}{{ image[8] }}{% endcapture %}
+        <div class="gallery-cell" data-thumb="{{ image_large }}" data-title="{% if image_alt contains 'youtube' or image_alt contains 'vimeo' %}{{ product.title }}{% else %}{{ image_alt | escape }}{% endif %}">
+          {% if image_alt contains 'youtube' or image_alt contains 'vimeo' %}
+            {% assign src = image_alt | split: 'src="' %}
+            {% assign src = src[1] | split: '"' | first %}
+
+            {% if src contains '?' %}
+              {% assign src = src | append: '&amp;autoplay=1' %}
+            {% else %}
+              {% assign src = src | append: '?autoplay=1' %}
+            {% endif %}
+
+            <div>
+              <a href="{{ src }}" title="{{ product.title | escape }}">
+                {{ image_alt }}
+              </a>
+            </div>
+          {% else %}
+            {% if template != 'index' and settings.enable_product_lightbox %}
+              <a href="{{ image_800x }}" class="lightbox" rel="gallery" data-fancybox-group="gallery">
+            {% endif %}
+              <img  src="{{ image_100x }}"
+                    alt="{{ image_alt | escape }}"
+                    class=" lazyload js-image-loaded {{ settings.image_loading_style }}"
+                    data-index="{{ forloop.index0 }}"
+                    data-image-id="{{ image_id }}"
+                    data-sizes="auto"
+                    data-src="{{ image_800x }}"
+                    data-srcset=" {{ image_200x }} 200w,
+                                  {{ image_400x }} 400w,
+                                  {{ image_600x }} 600w,
+                                  {{ image_800x }} 800w,
+                                  {{ image_1200x }} 1200w,
+                                  {{ image_2000x }} 2000w"
+                     />
+            {% if template != 'index' and settings.enable_product_lightbox %}
+              </a>
+            {% endif %}
+          {% endif %}
+        </div>
+      {% endfor %}
+  </div>
+  {% if settings.product_thumbs %}
+    {% if product.images.size > 1 and product-images != 'full' %}
+      <div class="product_gallery_nav product-{{ product.id }}-gallery-nav {% if product-images == blank %}product_slider{% endif %}">
+
+          {% for image_item in image_list %}
+            {% assign image = image_item | split: "`~`" %}
+            {% capture image_id %}{{ image[0] | strip }}{% endcapture %}
+            {% capture image_alt %}{{ image[1] | strip }}{% endcapture %}
+            {% capture image_100x %}{{ image[2] }}{% endcapture %}
+            {% capture image_200x %}{{ image[3] }}{% endcapture %}
+            {% capture image_400x %}{{ image[4] }}{% endcapture %}
+            {% capture image_600x %}{{ image[5] }}{% endcapture %}
+            {% capture image_800x %}{{ image[6] }}{% endcapture %}
+            {% capture image_1200x %}{{ image[7] }}{% endcapture %}
+            {% capture image_2000x %}{{ image[8] }}{% endcapture %}
+            <div class="gallery-cell" data-title="{{ image_alt | escape }}">
+                <img  src="{{ image_200x }}"
+                      alt="{{ image_alt | escape }}"
+                      data-index="{{ forloop.index0 }}"
+                      data-image-id="{{ image_id }}"
+                      data-featured-image="{{featured_image.id}}"
+                      />
+            </div>
+          {% endfor %}
+      </div>
+    {% endif %}
+  {% endif %}
+</div>
+
+<div class="zoom-box">
+ 
+			<div class="zoom-hover-icon zoom-out-icon">
+				<svg width="16px" height="14px" viewBox="0 0 16 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 39.1 (31720) - http://www.bohemiancoding.com/sketch -->
+    <title>43F364C7-86E3-4EA7-8CAB-02E1597DD4A2</title>
+    <desc>Created with sketchtool.</desc>
+    <defs></defs>
+    <g id="Product-Pages" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Zoom---Expanded" transform="translate(-798.000000, -209.000000)" stroke-width="0.5" stroke="#2B2B2B" fill="#2B2B2B">
+            <g id="Product-+-Details" transform="translate(0.000000, 113.000000)">
+                <g id="Zoom" transform="translate(114.000000, 75.000000)">
+                    <g id="Close" transform="translate(624.000000, 0.000000)">
+                        <polygon id="close-black" points="75 22.4 73.6 21 68 26.6 62.4 21 61 22.4 66.6 28 61 33.6 62.4 35 68 29.4 73.6 35 75 33.6 69.4 28"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
+
+			</div> 
+		</div>

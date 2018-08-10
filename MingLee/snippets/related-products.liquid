@@ -1,0 +1,51 @@
+{% if settings.product_sidebar != blank %}
+  <div class="twelve columns offset-by-four">
+{% endif %}
+
+{% if collection and collection.all_products_count > 1 %}
+  {% assign col = collection.handle %}
+{% else %}
+  {% assign col = product.collections.last.handle %}
+{% endif %}
+
+{% for tag in product.tags %}
+  {% if tag contains 'meta-related-collection-' %}
+    {% assign related_collection_handle = tag | remove: 'meta-related-collection-' %}
+    {% if collections[related_collection_handle].all_products_count > 0 %}
+      {% assign col = related_collection_handle %}
+      {% assign collection = collections[col] %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% if col %}
+  {% if collections[col].all_products_count != 1 or collections[col].products.first.id != product.id %}
+    {% assign skip_product = product %}
+    {% assign products = collections[col].products %}
+    {% assign products_per_row = settings.products_per_row %}
+    {% assign related_products_per_slide = settings.related_products_per_slide %}
+      <div class="related-products__title">
+        <h4 class="title center">{{ 'products.product.related_items' | t }}</h4>
+        <div class="feature_divider"></div>
+      </div>
+
+    {% if settings.product_sidebar == blank %}
+      </div>
+    {% endif %}
+
+    <div class="related-products">
+      {% if col and collections[col].all_products_count > 6 %}
+        {% assign limit = 13 %}
+        {% include 'product-slider', slider_type: 'many-products-slider', products_per_slide: related_products_per_slide %}
+      {% else %}
+        {% assign limit = 6 %}
+        {% include 'product-slider', slider_type: 'few-products-slider', products_per_slide: related_products_per_slide %}
+      {% endif %}
+    </div>
+
+  {% endif %}
+{% endif %}
+
+{% if settings.product_sidebar != blank %}
+  </div>
+{% endif %}
